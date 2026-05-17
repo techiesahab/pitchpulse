@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="PitchPulse — World Sports Live Scores, Weather and Standings">
+<title>PitchPulse — World Sports Live</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --color-background-primary:#ffffff;
+  --color-background-secondary:#f6f6f5;
+  --color-background-tertiary:#f0efee;
+  --color-text-primary:#1a1a19;
+  --color-text-secondary:#6b6b68;
+  --color-text-tertiary:#a0a09d;
+  --color-border-tertiary:#e8e7e5;
+  --color-border-secondary:#d4d3d0;
+  --font-sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  --border-radius-lg:10px;
+  --border-radius-md:7px;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --color-background-primary:#1c1c1b;
+    --color-background-secondary:#242423;
+    --color-background-tertiary:#161615;
+    --color-text-primary:#f0efee;
+    --color-text-secondary:#a0a09d;
+    --color-text-tertiary:#6b6b68;
+    --color-border-tertiary:#2e2e2c;
+    --color-border-secondary:#3a3a38;
+  }
+}
+body{font-family:var(--font-sans);background:var(--color-background-tertiary)}
+.header{background:var(--color-background-primary);border-bottom:.5px solid var(--color-border-tertiary);padding:0 14px;height:54px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:8px}
+.logo{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.logo-icon{width:28px;height:28px;border-radius:6px;background:#0F6E56;display:flex;align-items:center;justify-content:center}
+.logo-text{font-size:15px;font-weight:500;color:var(--color-text-primary)}
+.logo-sub{font-size:9px;color:#0F6E56;font-weight:500;letter-spacing:.05em}
+.header-right{display:flex;align-items:center;gap:5px;flex-shrink:0}
+.live-wrap{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;color:#993C1D}
+.ldot{width:6px;height:6px;border-radius:50%;background:#D85A30;animation:blink 1.2s infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hbtn{padding:4px 9px;border-radius:13px;font-size:11px;cursor:pointer;border:.5px solid var(--color-border-secondary);background:var(--color-background-secondary);color:var(--color-text-secondary);font-family:var(--font-sans);display:flex;align-items:center;gap:3px;transition:all .15s;white-space:nowrap}
+.hbtn:hover{border-color:#1D9E75;color:#1D9E75}
+.hbtn.spinning i{animation:spin .7s linear}
+@keyframes spin{to{transform:rotate(360deg)}}
+.lang-wrap{position:relative}
+.lang-dropdown{position:absolute;top:calc(100% + 6px);right:0;background:var(--color-background-primary);border:.5px solid var(--color-border-secondary);border-radius:var(--border-radius-lg);padding:5px;display:none;z-index:200;min-width:196px;max-height:320px;overflow-y:auto;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.lang-dropdown.open{display:block}
+.lg-title{font-size:9px;font-weight:600;color:var(--color-text-tertiary);letter-spacing:.07em;text-transform:uppercase;padding:4px 7px 2px}
+.lg-opt{display:flex;align-items:center;gap:7px;padding:6px 7px;border-radius:5px;cursor:pointer;font-size:12px;color:var(--color-text-primary);transition:background .1s}
+.lg-opt:hover{background:var(--color-background-secondary)}
+.lg-opt.active{background:#E1F5EE;color:#085041;font-weight:500}
+.main{max-width:920px;margin:0 auto;padding:12px}
+.search-wrap{position:relative;margin-bottom:12px}
+.search-ico{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--color-text-tertiary);font-size:15px;pointer-events:none}
+#si{width:100%;height:40px;border-radius:var(--border-radius-lg);border:.5px solid var(--color-border-secondary);background:var(--color-background-primary);padding:0 34px 0 36px;font-size:13px;font-family:var(--font-sans);color:var(--color-text-primary);outline:none;transition:border-color .15s}
+#si:focus{border-color:#1D9E75;box-shadow:0 0 0 3px rgba(29,158,117,.1)}
+#si::placeholder{color:var(--color-text-tertiary)}
+.sclear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--color-text-tertiary);font-size:17px;display:none;line-height:1}
+.filter-bar{display:flex;gap:5px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px}
+.filter-bar::-webkit-scrollbar{display:none}
+.ftab{padding:5px 11px;border-radius:16px;font-size:11px;cursor:pointer;border:.5px solid var(--color-border-tertiary);background:var(--color-background-primary);color:var(--color-text-secondary);white-space:nowrap;font-family:var(--font-sans);transition:all .15s}
+.ftab.active,.ftab:hover{background:#085041;color:#9FE1CB;border-color:#085041}
+.cnt{background:rgba(157,225,203,.2);border-radius:8px;padding:1px 5px;font-size:10px;margin-left:2px}
+.ptabs{display:flex;border-bottom:.5px solid var(--color-border-tertiary);margin-bottom:12px}
+.ptab{padding:8px 14px;font-size:12px;cursor:pointer;border:none;background:none;color:var(--color-text-secondary);font-family:var(--font-sans);border-bottom:2px solid transparent;transition:all .15s;margin-bottom:-1px}
+.ptab.active{color:#0F6E56;border-bottom-color:#0F6E56;font-weight:500}
+.sec-label{font-size:10px;font-weight:500;letter-spacing:.06em;color:var(--color-text-tertiary);text-transform:uppercase;margin:12px 0 6px;display:flex;align-items:center;gap:5px}
+.card{background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);margin-bottom:8px;overflow:hidden}
+.card.live-card{border:1.5px solid #1D9E75}
+.card-hdr{background:var(--color-background-secondary);padding:6px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:.5px solid var(--color-border-tertiary)}
+.tour-row{font-size:11px;color:var(--color-text-secondary);font-weight:500;display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.sp-pill{font-size:9px;font-weight:600;padding:1px 5px;border-radius:7px;text-transform:uppercase}
+.sp-c{background:#E1F5EE;color:#085041}.sp-f{background:#E6F1FB;color:#0C447C}.sp-b{background:#FAEEDA;color:#633806}.sp-t{background:#FBEAF0;color:#72243E}
+.sbadge{font-size:10px;font-weight:500;padding:2px 7px;border-radius:9px;white-space:nowrap}
+.bl{background:#FAECE7;color:#993C1D}.bf{background:#EAF3DE;color:#3B6D11}.bs{background:#E6F1FB;color:#185FA5}
+.card-body{padding:10px 12px}
+.teams-row{display:flex;align-items:center;gap:8px}
+.team{flex:1;min-width:0}.team-r{text-align:right}
+.tname{font-size:13px;font-weight:500;color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tscore{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-top:1px}
+.tscore span{font-size:11px;color:var(--color-text-secondary);font-weight:400}
+.vs{font-size:11px;color:var(--color-text-tertiary);text-align:center;min-width:18px}
+.weather-strip{margin-top:8px;padding:8px 10px;background:var(--color-background-secondary);border-radius:8px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;border:.5px solid var(--color-border-tertiary)}
+.wx-left{display:flex;align-items:center;gap:8px}
+.wx-icon{font-size:20px;line-height:1}
+.wx-venue{font-size:10px;color:var(--color-text-tertiary);margin-bottom:2px}
+.wx-temp{font-size:16px;font-weight:600;color:var(--color-text-primary);line-height:1}
+.wx-desc{font-size:10px;color:var(--color-text-secondary);margin-top:1px}
+.wx-stat-val{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.wx-stat-lbl{font-size:9px;color:var(--color-text-tertiary);margin-top:1px}
+.wx-rain-bar{width:36px;height:3px;border-radius:2px;background:var(--color-background-primary);overflow:hidden;margin:3px auto 0}
+.wx-rain-fill{height:100%;border-radius:2px}
+.rain-low{background:#1D9E75}.rain-mid{background:#E8A530}.rain-high{background:#D85A30}
+.mfoot{margin-top:7px;padding-top:6px;border-top:.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:3px}
+.finfo{font-size:11px;color:var(--color-text-secondary)}
+.rok{font-size:11px;color:#3B6D11;font-weight:500}
+.wp{display:flex;gap:4px;align-items:center;font-size:10px;color:var(--color-text-tertiary)}
+.wp-bar{height:4px;border-radius:2px;background:var(--color-background-secondary);flex:1;overflow:hidden;min-width:40px;display:flex}
+.wp-a{height:100%;background:#1D9E75}.wp-b{height:100%;background:#888780}
+.hero{background:var(--color-background-primary);border:1.5px solid #1D9E75;border-radius:var(--border-radius-lg);margin-bottom:10px;overflow:hidden}
+.hero-hdr{background:#085041;padding:8px 13px;display:flex;align-items:center;justify-content:space-between}
+.hero-tour{font-size:11px;color:#9FE1CB;font-weight:500;display:flex;align-items:center;gap:5px}
+.hero-live{background:#D85A30;color:#fff;font-size:10px;font-weight:600;padding:2px 8px;border-radius:9px;display:flex;align-items:center;gap:3px}
+.hero-body{padding:13px}
+.hero-teams{display:flex;align-items:center;gap:10px}
+.hero-t{flex:1;min-width:0}.hero-tr{text-align:right}
+.hero-tname{font-size:14px;font-weight:500;color:var(--color-text-primary)}
+.hero-score{font-size:24px;font-weight:500;color:#0F6E56;margin-top:2px}
+.hero-score span{font-size:12px;color:var(--color-text-secondary);font-weight:400}
+.hero-foot{margin-top:9px;padding-top:8px;border-top:.5px solid var(--color-border-tertiary);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:5px}
+.hero-info{font-size:11px;color:var(--color-text-secondary)}
+.hero-alert{font-size:11px;font-weight:600;color:#993C1D}
+.hero-stats{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+.hstat{background:var(--color-background-secondary);border-radius:5px;padding:3px 7px;font-size:11px;color:var(--color-text-secondary)}
+.hero-wx{margin-top:10px;padding:10px;background:#064535;border-radius:8px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.hero-wx-left{display:flex;align-items:center;gap:10px}
+.hero-wx-icon{font-size:26px;line-height:1}
+.hero-wx-temp{font-size:22px;font-weight:600;color:#9FE1CB;line-height:1}
+.hero-wx-desc{font-size:11px;color:#9FE1CB;opacity:.8;margin-top:2px}
+.hero-wx-venue{font-size:10px;color:#9FE1CB;opacity:.6;margin-top:1px}
+.hero-wx-val{font-size:13px;font-weight:600;color:#9FE1CB}
+.hero-wx-lbl{font-size:9px;color:#9FE1CB;opacity:.6;margin-top:1px}
+.ticker-wrap{overflow:hidden;background:#085041;border-radius:var(--border-radius-md);padding:5px 0;margin-bottom:11px}
+.ticker-inner{display:flex;animation:tick 34s linear infinite;white-space:nowrap}
+.ticker-inner:hover{animation-play-state:paused}
+.tick-item{padding:0 22px;font-size:11px;font-weight:500;color:#9FE1CB;border-right:1px solid rgba(157,225,203,.3);white-space:nowrap}
+@keyframes tick{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.no-res{text-align:center;padding:32px 16px;color:var(--color-text-tertiary);font-size:13px}
+.last-upd{font-size:10px;color:var(--color-text-tertiary);text-align:right;margin-top:6px}
+.stand-table{width:100%;border-collapse:collapse;font-size:12px;background:var(--color-background-primary);border-radius:var(--border-radius-lg);overflow:hidden;border:.5px solid var(--color-border-tertiary)}
+.stand-table th{background:var(--color-background-secondary);padding:7px 9px;text-align:right;font-weight:500;color:var(--color-text-secondary);border-bottom:.5px solid var(--color-border-tertiary)}
+.stand-table th:first-child,.stand-table th:nth-child(2){text-align:left}
+.stand-table td{padding:7px 9px;text-align:right;color:var(--color-text-primary);border-bottom:.5px solid var(--color-border-tertiary)}
+.stand-table td:first-child{text-align:left;color:var(--color-text-secondary);font-size:11px;width:26px}
+.stand-table td:nth-child(2){text-align:left;font-weight:500}
+.stand-table tr:last-child td{border-bottom:none}
+.stand-table tr:hover td{background:var(--color-background-secondary)}
+.pts-col{font-weight:600;color:#0F6E56}
+.rb{display:inline-flex;align-items:center;justify-content:center;width:19px;height:19px;border-radius:50%;font-size:10px;font-weight:600}
+.r1{background:#FAEEDA;color:#633806}.r2{background:#D3D1C7;color:#2C2C2A}.r3{background:#FAECE7;color:#993C1D}
+.conf-hdr{background:#E1F5EE;padding:6px 9px;font-size:11px;font-weight:600;color:#085041;border-bottom:.5px solid var(--color-border-tertiary)}
+.relegation-row{background:#FFF5F5}
+.pg{display:none}.pg.active{display:block}
+[dir=rtl] .team-r{text-align:left}[dir=rtl] .hero-tr{text-align:left}
+[dir=rtl] .search-ico{left:auto;right:11px}
+[dir=rtl] #si{padding:0 36px 0 34px}
+[dir=rtl] .sclear{right:auto;left:10px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+        <circle cx="8" cy="8" r="6" stroke="#9FE1CB" stroke-width="1.4"/>
+        <line x1="2" y1="8" x2="14" y2="8" stroke="#9FE1CB" stroke-width="1.4"/>
+        <line x1="8" y1="2" x2="8" y2="14" stroke="#9FE1CB" stroke-width="1.4"/>
+        <path d="M4 4L12 12" stroke="#9FE1CB" stroke-width=".9"/>
+        <path d="M12 4L4 12" stroke="#9FE1CB" stroke-width=".9"/>
+      </svg>
+    </div>
+    <div>
+      <div class="logo-text">PitchPulse</div>
+      <div class="logo-sub" id="logoSub">WORLD SPORTS HQ</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="live-wrap"><div class="ldot"></div><span id="liveCount">5 LIVE</span></div>
+    <button class="hbtn" id="refreshBtn" onclick="doRefresh()">
+      <i class="ti ti-refresh"></i><span id="refreshLabel">Refresh</span>
+    </button>
+    <div class="lang-wrap">
+      <button class="hbtn" id="langBtn" onclick="toggleDD()">
+        <i class="ti ti-world" style="font-size:12px"></i>
+        <span id="langLabel">🇬🇧 EN</span>
+        <i class="ti ti-chevron-down" style="font-size:10px"></i>
+      </button>
+      <div class="lang-dropdown" id="langDD"></div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="ticker-wrap"><div class="ticker-inner" id="ticker"></div></div>
+  <div class="search-wrap">
+    <i class="ti ti-search search-ico"></i>
+    <input type="text" id="si" autocomplete="off" oninput="handleSearch(this.value)" placeholder="Search teams, players, tournaments…">
+    <button class="sclear" id="sclear" onclick="clearSearch()">×</button>
+  </div>
+  <div class="ptabs">
+    <button class="ptab active" onclick="switchPg('scores',this)" id="tab-scores">Scores</button>
+    <button class="ptab" onclick="switchPg('standings',this)" id="tab-standings">Standings</button>
+    <button class="ptab" onclick="switchPg('weather',this)" id="tab-weather">🌤️ Weather</button>
+  </div>
+  <div class="pg active" id="pg-scores">
+    <div class="filter-bar" id="fbar">
+      <button class="ftab active" onclick="setFilter('all',this)">🌍 <span id="f-all">All Sports</span><span class="cnt" id="cnt-all">17</span></button>
+      <button class="ftab" onclick="setFilter('cricket',this)">🏏 <span id="f-cricket">Cricket</span><span class="cnt" id="cnt-c">5</span></button>
+      <button class="ftab" onclick="setFilter('football',this)">⚽ <span id="f-football">Football</span><span class="cnt" id="cnt-f">5</span></button>
+      <button class="ftab" onclick="setFilter('basketball',this)">🏀 <span id="f-basketball">Basketball</span><span class="cnt" id="cnt-b">4</span></button>
+      <button class="ftab" onclick="setFilter('tennis',this)">🎾 <span id="f-tennis">Tennis</span><span class="cnt" id="cnt-t">3</span></button>
+    </div>
+    <div id="scoreArea"></div>
+  </div>
+  <div class="pg" id="pg-standings">
+    <div class="filter-bar" id="sfbar">
+      <button class="ftab active" onclick="setSTab('epl',this)">⚽ EPL</button>
+      <button class="ftab" onclick="setSTab('nba',this)">🏀 NBA</button>
+      <button class="ftab" onclick="setSTab('ipl',this)">🏏 IPL</button>
+    </div>
+    <div id="standArea"></div>
+  </div>
+  <div class="pg" id="pg-weather">
+    <div id="weatherArea"></div>
+  </div>
+</div>
+
+<script>
+const LANGS=[{code:'en',flag:'🇬🇧',name:'English',native:'English',dir:'ltr',group:'Europe'},{code:'hi',flag:'🇮🇳',name:'Hindi',native:'हिन्दी',dir:'ltr',group:'Asia'},{code:'es',flag:'🇪🇸',name:'Spanish',native:'Español',dir:'ltr',group:'Europe'},{code:'fr',flag:'🇫🇷',name:'French',native:'Français',dir:'ltr',group:'Europe'},{code:'de',flag:'🇩🇪',name:'German',native:'Deutsch',dir:'ltr',group:'Europe'},{code:'pt',flag:'🇧🇷',name:'Portuguese',native:'Português',dir:'ltr',group:'Americas'},{code:'ar',flag:'🇸🇦',name:'Arabic',native:'العربية',dir:'rtl',group:'Middle East'},{code:'zh',flag:'🇨🇳',name:'Chinese',native:'中文',dir:'ltr',group:'Asia'},{code:'ja',flag:'🇯🇵',name:'Japanese',native:'日本語',dir:'ltr',group:'Asia'},{code:'ko',flag:'🇰🇷',name:'Korean',native:'한국어',dir:'ltr',group:'Asia'},{code:'ru',flag:'🇷🇺',name:'Russian',native:'Русский',dir:'ltr',group:'Europe'},{code:'tr',flag:'🇹🇷',name:'Turkish',native:'Türkçe',dir:'ltr',group:'Europe'},{code:'it',flag:'🇮🇹',name:'Italian',native:'Italiano',dir:'ltr',group:'Europe'},{code:'nl',flag:'🇳🇱',name:'Dutch',native:'Nederlands',dir:'ltr',group:'Europe'},{code:'fa',flag:'🇮🇷',name:'Persian',native:'فارسی',dir:'rtl',group:'Middle East'},{code:'bn',flag:'🇧🇩',name:'Bengali',native:'বাংলা',dir:'ltr',group:'Asia'},{code:'ur',flag:'🇵🇰',name:'Urdu',native:'اردو',dir:'rtl',group:'Asia'},{code:'id',flag:'🇮🇩',name:'Indonesian',native:'Bahasa Indonesia',dir:'ltr',group:'Asia'},{code:'sw',flag:'🇰🇪',name:'Swahili',native:'Kiswahili',dir:'ltr',group:'Africa'},{code:'ms',flag:'🇲🇾',name:'Malay',native:'Bahasa Melayu',dir:'ltr',group:'Asia'}];
+const T={en:{live:'LIVE',refresh:'Refresh',refreshing:'Refreshing…',updated:'Updated just now',search:'Search teams, players, tournaments… e.g. IPL, Lakers, Arsenal',liveNow:'Live now',upcoming:'Upcoming',recent:'Recent results',noRes:'No matches found. Try: IPL, Arsenal, Lakers',standings:'Standings',scores:'Scores',weather:'Weather',pos:'#',team:'Team',w:'W',l:'L',d:'D',pts:'Pts',pct:'Win%',nrr:'NRR',east:'Eastern Conference',west:'Western Conference',eplt:'Premier League 2025/26',nbat:'NBA Top 5',iplt:'IPL 2026',relzone:'Red = Relegation zone',all:'All Sports',cricket:'Cricket',football:'Football',basketball:'Basketball',tennis:'Tennis',logoSub:'WORLD SPORTS HQ',liveCount:'5 LIVE',final:'Final',soon:'Soon',rain:'Rain',venueWeather:'Venue Weather'},hi:{live:'लाइव',refresh:'रिफ्रेश',refreshing:'हो रहा है…',updated:'अभी अपडेट हुआ',search:'खोजें: IPL, लेकर्स, आर्सेनल, गॉफ…',liveNow:'अभी लाइव',upcoming:'आने वाले मैच',recent:'हाल के नतीजे',noRes:'कोई मैच नहीं मिला',standings:'अंकतालिका',scores:'स्कोर',weather:'मौसम',pos:'#',team:'टीम',w:'जीत',l:'हार',d:'ड्रॉ',pts:'अंक',pct:'जीत%',nrr:'NRR',east:'पूर्वी सम्मेलन',west:'पश्चिमी सम्मेलन',eplt:'प्रीमियर लीग 2025/26',nbat:'NBA शीर्ष 5',iplt:'IPL 2026',relzone:'लाल = रेलीगेशन जोन',all:'सभी खेल',cricket:'क्रिकेट',football:'फुटबॉल',basketball:'बास्केटबॉल',tennis:'टेनिस',logoSub:'विश्व खेल केंद्र',liveCount:'5 लाइव',final:'अंतिम',soon:'जल्द',rain:'बारिश',venueWeather:'स्टेडियम मौसम'},es:{live:'EN VIVO',refresh:'Actualizar',refreshing:'Actualizando…',updated:'Actualizado ahora',search:'Buscar equipos, jugadores…',liveNow:'En vivo',upcoming:'Próximos',recent:'Resultados',noRes:'Sin partidos',standings:'Clasificación',scores:'Marcadores',weather:'Clima',pos:'#',team:'Equipo',w:'G',l:'P',d:'E',pts:'Pts',pct:'%',nrr:'NRR',east:'Conf. Este',west:'Conf. Oeste',eplt:'Premier League',nbat:'NBA Top 5',iplt:'IPL 2026',relzone:'Rojo=Descenso',all:'Todos',cricket:'Criquet',football:'Fútbol',basketball:'Baloncesto',tennis:'Tenis',logoSub:'SEDE DEPORTIVA MUNDIAL',liveCount:'5 EN VIVO',final:'Final',soon:'Pronto',rain:'Lluvia',venueWeather:'Clima del estadio'},fr:{live:'EN DIRECT',refresh:'Actualiser',refreshing:'Actualisation…',updated:'Mis à jour',search:'Rechercher équipes, joueurs…',liveNow:'En direct',upcoming:'À venir',recent:'Résultats',noRes:'Aucun match',standings:'Classement',scores:'Scores',weather:'Météo',pos:'#',team:'Équipe',w:'V',l:'D',d:'N',pts:'Pts',pct:'%',nrr:'NRR',east:'Conf. Est',west:'Conf. Ouest',eplt:'Premier League',nbat:'NBA Top 5',iplt:'IPL 2026',relzone:'Rouge=Relégation',all:'Tous',cricket:'Cricket',football:'Football',basketball:'Basketball',tennis:'Tennis',logoSub:'HQ SPORT MONDIAL',liveCount:'5 EN DIRECT',final:'Final',soon:'Bientôt',rain:'Pluie',venueWeather:'Météo du stade'},ar:{live:'مباشر',refresh:'تحديث',refreshing:'جارٍ التحديث…',updated:'تم التحديث',search:'ابحث عن الفرق، اللاعبين…',liveNow:'مباشر الآن',upcoming:'القادمة',recent:'النتائج',noRes:'لا مباريات',standings:'الترتيب',scores:'النتائج',weather:'الطقس',pos:'#',team:'الفريق',w:'ف',l:'خ',d:'ت',pts:'نق',pct:'%',nrr:'NRR',east:'الشرقي',west:'الغربي',eplt:'الدوري الإنجليزي',nbat:'NBA أفضل 5',iplt:'IPL 2026',relzone:'أحمر=هبوط',all:'الكل',cricket:'كريكيت',football:'كرة القدم',basketball:'كرة السلة',tennis:'تنس',logoSub:'مقر الرياضة العالمية',liveCount:'5 مباشر',final:'نهائي',soon:'قريباً',rain:'مطر',venueWeather:'طقس الملعب'},zh:{live:'直播',refresh:'刷新',refreshing:'刷新中…',updated:'刚刚更新',search:'搜索球队、球员…',liveNow:'直播中',upcoming:'即将',recent:'近期',noRes:'未找到',standings:'积分榜',scores:'比分',weather:'天气',pos:'#',team:'球队',w:'胜',l:'负',d:'平',pts:'积分',pct:'胜率',nrr:'NRR',east:'东部',west:'西部',eplt:'英超',nbat:'NBA前5',iplt:'IPL 2026',relzone:'红=降级',all:'全部',cricket:'板球',football:'足球',basketball:'篮球',tennis:'网球',logoSub:'世界体育总部',liveCount:'5直播',final:'结束',soon:'即将',rain:'降雨',venueWeather:'场馆天气'}};
+const WEATHER={kolkata:{venue:'Eden Gardens, Kolkata',city:'Kolkata, India',temp:36,high:37,desc:'Partly Sunny',rain:55,icon:'⛅',flag:'🇮🇳'},rome:{venue:'Foro Italico, Rome',city:'Rome, Italy',temp:20,high:22,desc:'Sunny',rain:15,icon:'☀️',flag:'🇮🇹'},detroit:{venue:'Little Caesars Arena, Detroit',city:'Detroit, USA',temp:18,high:28,desc:'Mostly Cloudy',rain:65,icon:'☁️',flag:'🇺🇸'},manchester:{venue:'Old Trafford, Manchester',city:'Manchester, UK',temp:12,high:13,desc:'Cloudy',rain:20,icon:'☁️',flag:'🇬🇧'},london_arsenal:{venue:'Emirates Stadium, London',city:'London, UK',temp:14,high:16,desc:'Cloudy',rain:20,icon:'🌥️',flag:'🇬🇧'},london_chelsea:{venue:'Stamford Bridge, London',city:'London, UK',temp:14,high:16,desc:'Cloudy',rain:20,icon:'🌥️',flag:'🇬🇧'},okc:{venue:'Paycom Center, OKC',city:'Oklahoma City, USA',temp:23,high:29,desc:'Clear',rain:20,icon:'🌙',flag:'🇺🇸'},dhaka:{venue:'Sher-e-Bangla, Dhaka',city:'Dhaka, Bangladesh',temp:34,high:35,desc:'Partly Sunny',rain:40,icon:'⛅',flag:'🇧🇩'},valencia:{venue:'Club de Tenis Valencia',city:'Valencia, Spain',temp:20,high:24,desc:'Clear',rain:5,icon:'☀️',flag:'🇪🇸'},geneva:{venue:'Geneva Tennis Club',city:'Geneva, Switzerland',temp:17,high:20,desc:'Partly Cloudy',rain:20,icon:'⛅',flag:'🇨🇭'}};
+const MATCHES=[{id:'ipl1',sport:'cricket',status:'live',featured:true,tournament:'Indian Premier League 2026',home:'Kolkata Knight Riders',away:'Gujarat Titans',homeScore:'247/2',awayScore:'208/3',homeOvers:'20 ov',awayOvers:'19 ov',venue:'Eden Gardens, Kolkata',time:'7:30 PM IST',wxKey:'kolkata',alert:{en:'GT need 40 off 6 balls!',hi:'GT को 6 गेंद में 40 रन चाहिए!',es:'¡GT necesita 40 en 6!',fr:'GT besoin de 40 en 6!',ar:'GT تحتاج 40 في 6!',zh:'GT需6球40分！'},extras:['Finn Allen: 93(35)','Shubman Gill: 85(49)','Narine: 2/29'],tags:['kkr','kolkata','gt','gujarat','ipl','cricket','t20','allen','gill','narine']},{id:'ban1',sport:'cricket',status:'live',tournament:'Test — Bangladesh vs Pakistan',home:'Bangladesh',away:'Pakistan',homeScore:'—',awayScore:'—',venue:'Sher-e-Bangla, Dhaka',time:'9:30 AM IST',wxKey:'dhaka',tags:['bangladesh','pakistan','test','cricket']},{id:'eng1',sport:'cricket',status:'live',tournament:'ODI — England Women vs NZ Women',home:'England Women',away:'New Zealand Women',homeScore:'—',awayScore:'—',venue:'England',time:'3:30 PM IST',tags:['england','new zealand','odi','women','cricket']},{id:'ten1',sport:'tennis',status:'live',tournament:'WTA Rome — Women Singles',home:'Gauff, Coco',away:'Svitolina, Elina',homeScore:'4',awayScore:'6',sets:'Set 1: 4–6 | Set 2: 4–5*',venue:'Foro Italico, Rome',time:'9:30 PM IST',wxKey:'rome',tags:['gauff','coco','svitolina','tennis','wta','rome']},{id:'nba1',sport:'basketball',status:'live',tournament:'NBA Playoffs — East Semis (DET leads 4–3)',home:'Detroit Pistons',away:'Cleveland Cavaliers',homeScore:'115',awayScore:'94',result:'DET lead 4–3 · Game 7 Mon',venue:'Little Caesars Arena, Detroit',time:'4:30 AM IST',wxKey:'detroit',tags:['detroit','pistons','cleveland','cavaliers','nba','basketball']},{id:'epl3',sport:'football',status:'upcoming',tournament:'Premier League GW38',home:'Manchester United',away:'Nottingham Forest',homeScore:'—',awayScore:'—',venue:'Old Trafford, Manchester',time:'Sun May 17 · 5:00 PM IST',wxKey:'manchester',winProb:{home:59.5,away:18.7,draw:21.8},tags:['manchester','united','nottingham','forest','epl','football']},{id:'epl4',sport:'football',status:'upcoming',tournament:'Premier League GW38',home:'Arsenal FC',away:'Burnley FC',homeScore:'—',awayScore:'—',venue:'Emirates Stadium, London',time:'Tue May 19 · 12:30 AM IST',wxKey:'london_arsenal',winProb:{home:89.5,away:2.9,draw:7.6},tags:['arsenal','burnley','epl','football']},{id:'epl5',sport:'football',status:'upcoming',tournament:'Premier League GW38',home:'Chelsea FC',away:'Tottenham Hotspur',homeScore:'—',awayScore:'—',venue:'Stamford Bridge, London',time:'Wed May 20 · 12:45 AM IST',wxKey:'london_chelsea',winProb:{home:45.6,away:29.1,draw:25.3},tags:['chelsea','tottenham','spurs','epl','football']},{id:'nba2',sport:'basketball',status:'upcoming',tournament:'NBA Playoffs — East Semis Game 7',home:'Detroit Pistons',away:'Cleveland Cavaliers',homeScore:'—',awayScore:'—',venue:'Detroit',time:'Mon May 18 · 5:30 AM IST',wxKey:'detroit',winProb:{home:61.6,away:38.4},tags:['detroit','pistons','cleveland','nba']},{id:'nba3',sport:'basketball',status:'upcoming',tournament:'NBA — West Conference Finals',home:'OKC Thunder',away:'San Antonio Spurs',homeScore:'—',awayScore:'—',venue:'Paycom Center, OKC',time:'Tue May 19 · 6:00 AM IST',wxKey:'okc',winProb:{home:69.1,away:30.9},tags:['okc','thunder','san antonio','spurs','nba']},{id:'epl1',sport:'football',status:'final',tournament:'Premier League 2025/26',home:'Aston Villa',away:'Liverpool FC',homeScore:'4',awayScore:'2',result:'Aston Villa won 4–2',time:'Sat May 16',tags:['aston','villa','liverpool','epl','football']},{id:'epl2',sport:'football',status:'final',tournament:'Premier League 2025/26',home:'Manchester City',away:'Crystal Palace',homeScore:'3',awayScore:'0',result:'Man City won 3–0',time:'Thu May 14',tags:['manchester','city','crystal','palace','epl','football']},{id:'nba4',sport:'basketball',status:'final',tournament:'NBA — West Semis',home:'San Antonio Spurs',away:'Minnesota Timberwolves',homeScore:'139',awayScore:'109',result:'SAS won series 4–2',time:'Sat May 16',tags:['san antonio','spurs','minnesota','timberwolves','nba']},{id:'ten2',sport:'tennis',status:'live',tournament:'ATP Challenger Valencia',home:'Vallejo, Adolfo',away:'Munar, Jaume',homeScore:'4',awayScore:'6+',sets:'Set 1: 4–6 | Set 2: 0–0*',venue:'Valencia, Spain',time:'10:20 PM IST',wxKey:'valencia',tags:['vallejo','munar','tennis','atp','valencia']},{id:'ten3',sport:'tennis',status:'final',tournament:'ATP Geneva — Men Singles',home:'Svajda, Zachary',away:'Rehberg, Max',homeScore:'2',awayScore:'2',result:'Rehberg won 6–2, 6–2',venue:'Geneva',time:'7:55 PM IST',wxKey:'geneva',tags:['svajda','rehberg','tennis','atp','geneva']},{id:'nep1',sport:'cricket',status:'final',tournament:'ICC CWC League Two',home:'Nepal',away:'Opponent',homeScore:'199/1',awayScore:'195/10',result:'Nepal won by 9 wickets',time:'9:15 AM IST',tags:['nepal','icc','cricket']},{id:'jpn1',sport:'cricket',status:'final',tournament:'T20 WC East Asia-Pacific Qualifier',home:'Japan',away:'Opponent',homeScore:'82/1',awayScore:'81/10',result:'Japan won by 9 wickets',time:'10:30 AM IST',tags:['japan','t20','cricket']}];
+const EPL_STAND=[{r:1,t:'Arsenal FC',w:24,l:5,d:7,pts:79},{r:2,t:'Manchester City',w:23,l:5,d:8,pts:77},{r:3,t:'Manchester United',w:18,l:7,d:11,pts:65},{r:4,t:'Aston Villa',w:18,l:11,d:8,pts:62},{r:5,t:'Liverpool FC',w:17,l:12,d:8,pts:59},{r:6,t:'AFC Bournemouth',w:13,l:7,d:16,pts:55},{r:7,t:'Brighton',w:14,l:11,d:11,pts:53},{r:8,t:'Brentford FC',w:14,l:13,d:9,pts:51},{r:9,t:'Chelsea FC',w:13,l:13,d:10,pts:49},{r:10,t:'Everton FC',w:13,l:13,d:10,pts:49},{r:11,t:'Fulham FC',w:14,l:16,d:6,pts:48},{r:12,t:'Sunderland',w:12,l:12,d:12,pts:48},{r:13,t:'Newcastle United',w:13,l:16,d:7,pts:46},{r:14,t:'Leeds United',w:10,l:12,d:14,pts:44},{r:15,t:'Crystal Palace',w:11,l:14,d:11,pts:44},{r:16,t:'Nottingham Forest',w:11,l:15,d:10,pts:43},{r:17,t:'Tottenham Hotspur',w:9,l:16,d:11,pts:38},{r:18,t:'West Ham United',w:9,l:18,d:9,pts:36},{r:19,t:'Burnley FC',w:4,l:23,d:9,pts:21},{r:20,t:'Wolverhampton',w:3,l:24,d:9,pts:18}];
+const NBA_WEST=[{r:1,t:'OKC Thunder',w:64,l:18,pct:.780},{r:2,t:'San Antonio Spurs',w:62,l:20,pct:.756},{r:3,t:'Denver Nuggets',w:54,l:28,pct:.659},{r:4,t:'LA Lakers',w:53,l:29,pct:.646},{r:5,t:'Minnesota Timberwolves',w:49,l:33,pct:.598}];
+const NBA_EAST=[{r:1,t:'Detroit Pistons',w:60,l:22,pct:.732},{r:2,t:'Boston Celtics',w:56,l:26,pct:.683},{r:3,t:'New York Knicks',w:53,l:29,pct:.646},{r:4,t:'Cleveland Cavaliers',w:52,l:30,pct:.634},{r:5,t:'Houston Rockets',w:52,l:30,pct:.634}];
+const IPL_STAND=[{r:1,t:'Kolkata Knight Riders',w:9,l:3,pts:18,nrr:'+1.42'},{r:2,t:'Gujarat Titans',w:8,l:4,pts:16,nrr:'+0.87'},{r:3,t:'Mumbai Indians',w:7,l:5,pts:14,nrr:'+0.51'},{r:4,t:'Royal Challengers B.',w:7,l:5,pts:14,nrr:'+0.34'},{r:5,t:'Rajasthan Royals',w:6,l:6,pts:12,nrr:'-0.12'},{r:6,t:'Chennai Super Kings',w:6,l:6,pts:12,nrr:'-0.28'},{r:7,t:'Delhi Capitals',w:5,l:7,pts:10,nrr:'-0.41'},{r:8,t:'Punjab Kings',w:4,l:8,pts:8,nrr:'-0.63'},{r:9,t:'Sunrisers Hyderabad',w:3,l:9,pts:6,nrr:'-0.89'},{r:10,t:'Lucknow Super Giants',w:2,l:10,pts:4,nrr:'-1.18'}];
+const TICKER_ITEMS=['KKR 247/2 vs GT 208/3 🏏 · Eden Gardens ⛅36°C','🎾 WTA Rome · Gauff vs Svitolina LIVE · Rome ☀️20°C','🏀 NBA DET leads CLE 4–3 · Game 7 Mon · Detroit ☁️18°C','⚽ EPL · Man Utd vs Forest · Old Trafford ☁️12°C','🏏 Test · Bangladesh vs Pakistan · Dhaka ⛅34°C','🏀 NBA West Finals · OKC vs SAS · Tue · OKC 🌙23°C','⚽ Arsenal lead EPL · 79 pts · Emirates ☁️14°C'];
+let lang='en',filter='all',searchQ='',sSTab='epl',lastUpd=new Date();
+function g(k){return(T[lang]||T.en)[k]||T.en[k]||k;}
+function buildDD(){const groups={};LANGS.forEach(l=>{if(!groups[l.group])groups[l.group]=[];groups[l.group].push(l);});let html='';Object.entries(groups).forEach(([gr,ls])=>{html+=`<div class="lg-title">${gr}</div>`;ls.forEach(l=>{html+=`<div class="lg-opt ${l.code===lang?'active':''}" onclick="setLang('${l.code}')"><span style="font-size:15px">${l.flag}</span><span style="flex:1">${l.name}</span><span style="font-size:10px;color:var(--color-text-tertiary)">${l.native}</span></div>`;});});document.getElementById('langDD').innerHTML=html;}
+function toggleDD(){document.getElementById('langDD').classList.toggle('open');buildDD();}
+document.addEventListener('click',e=>{if(!e.target.closest('.lang-wrap'))document.getElementById('langDD').classList.remove('open');});
+function setLang(code){lang=code;const l=LANGS.find(x=>x.code===code);document.body.setAttribute('dir',l.dir);document.getElementById('langLabel').textContent=l.flag+' '+code.toUpperCase();document.getElementById('langDD').classList.remove('open');applyLang();renderScores();renderStandings();renderWeatherTab();}
+function applyLang(){document.getElementById('si').placeholder=g('search');document.getElementById('refreshLabel').textContent=g('refresh');document.getElementById('liveCount').textContent=g('liveCount');document.getElementById('logoSub').textContent=g('logoSub');document.getElementById('tab-scores').textContent=g('scores');document.getElementById('tab-standings').textContent=g('standings');document.getElementById('tab-weather').textContent=g('weather')+' 🌤️';document.getElementById('f-all').textContent=g('all')+' ';document.getElementById('f-cricket').textContent=g('cricket')+' ';document.getElementById('f-football').textContent=g('football')+' ';document.getElementById('f-basketball').textContent=g('basketball')+' ';document.getElementById('f-tennis').textContent=g('tennis')+' ';buildTicker();}
+function buildTicker(){const items=[...TICKER_ITEMS,...TICKER_ITEMS];document.getElementById('ticker').innerHTML=items.map(i=>`<span class="tick-item">${i}</span>`).join('');}
+function wxStrip(key){const w=WEATHER[key];if(!w)return '';const rc=w.rain<30?'rain-low':w.rain<60?'rain-mid':'rain-high';const warn=w.rain>=55?`<span style="font-size:9px;font-weight:600;color:#993C1D;margin-left:4px">⚠️${w.rain}%</span>`:'';return `<div class="weather-strip"><div class="wx-left"><div class="wx-icon">${w.icon}</div><div><div class="wx-venue">${w.venue} ${w.flag}</div><div class="wx-temp">${w.temp}°C <span style="font-size:10px;font-weight:400;color:var(--color-text-secondary)">/ ${w.high}°C</span></div><div class="wx-desc">${w.desc}${warn}</div></div></div><div class="wx-right"><div class="wx-stat"><div class="wx-stat-val">${w.rain}%</div><div class="wx-rain-bar"><div class="wx-rain-fill ${rc}" style="width:${w.rain}%"></div></div><div class="wx-stat-lbl">${g('rain')}</div></div></div></div>`;}
+function heroWx(key){const w=WEATHER[key];if(!w)return '';const rc=w.rain<30?'rain-low':w.rain<60?'rain-mid':'rain-high';const warn=w.rain>=55?`<div style="font-size:10px;font-weight:600;color:#FFB86C;margin-top:4px">⚠️ ${w.rain}% ${g('rain')} chance</div>`:'';return `<div class="hero-wx"><div class="hero-wx-left"><div class="hero-wx-icon">${w.icon}</div><div><div class="hero-wx-temp">${w.temp}°C</div><div class="hero-wx-desc">${w.desc} · High ${w.high}°C</div><div class="hero-wx-venue">${w.venue} ${w.flag}</div>${warn}</div></div><div class="hero-wx-right"><div class="hero-wx-stat"><div class="hero-wx-val">${w.rain}%</div><div class="wx-rain-bar"><div class="wx-rain-fill ${rc}" style="width:${w.rain}%"></div></div><div class="hero-wx-lbl">${g('rain')}</div></div></div></div>`;}
+function spPill(s){const m={cricket:'sp-c 🏏',football:'sp-f ⚽',basketball:'sp-b 🏀',tennis:'sp-t 🎾'};const[cls,em]=(m[s]||'sp-c 🏏').split(' ');return `<span class="sp-pill ${cls}">${em} ${g(s)||s}</span>`;}
+function wpBar(p){if(!p)return '';const ha=p.home||0,aw=p.away||0,dr=p.draw||0,tot=ha+aw+(dr||0);const hp=Math.round(ha/tot*100),ap=Math.round(aw/tot*100);return `<div class="wp"><span>${hp}%</span><div class="wp-bar"><div class="wp-a" style="width:${hp}%"></div><div class="wp-b" style="width:${ap}%"></div></div><span>${ap}%</span></div>`;}
+function sbadge(s){if(s==='live')return `<span class="sbadge bl">● ${g('live')}</span>`;if(s==='final')return `<span class="sbadge bf">${g('final')}</span>`;return `<span class="sbadge bs">${g('soon')}</span>`;}
+function getAlert(m){if(m.alert)return m.alert[lang]||m.alert.en||'';return m.result||'';}
+function renderCard(m){const alert=getAlert(m);if(m.featured){return `<div class="hero"><div class="hero-hdr"><div class="hero-tour"><i class="ti ti-trophy" style="font-size:11px"></i>${m.tournament}</div><div class="hero-live"><div class="ldot" style="background:#fff"></div>${g('live')}</div></div><div class="hero-body"><div class="hero-teams"><div class="hero-t"><div class="hero-tname">${m.home}</div><div class="hero-score">${m.homeScore} <span>${m.homeOvers||''}</span></div></div><div class="vs">vs</div><div class="hero-t hero-tr"><div class="hero-tname">${m.away}</div><div class="hero-score">${m.awayScore} <span>${m.awayOvers||''}</span></div></div></div><div class="hero-foot"><div class="hero-info"><i class="ti ti-map-pin" style="font-size:11px"></i> ${m.venue} · ${m.time}</div><div class="hero-alert">${alert}</div></div>${m.extras?`<div class="hero-stats">${m.extras.map(e=>`<div class="hstat">${e}</div>`).join('')}</div>`:''}${heroWx(m.wxKey)}</div></div>`;}
+const setsRow=m.sets?`<div style="font-size:10px;color:var(--color-text-secondary);margin-top:2px">${m.sets}</div>`:'';
+const foot=m.result?`<div class="rok">${m.result}</div>`:m.winProb?wpBar(m.winProb):'';
+return `<div class="card ${m.status==='live'?'live-card':''}"><div class="card-hdr"><div class="tour-row">${spPill(m.sport)} ${m.tournament}</div>${sbadge(m.status)}</div><div class="card-body"><div class="teams-row"><div class="team"><div class="tname">${m.home}</div>${m.homeScore!=='—'?`<div class="tscore">${m.homeScore} <span>${m.homeOvers||''}</span></div>`:''}</div><div class="vs">vs</div><div class="team team-r"><div class="tname">${m.away}</div>${m.awayScore!=='—'?`<div class="tscore">${m.awayScore} <span>${m.awayOvers||''}</span></div>`:''}</div></div>${setsRow}<div class="mfoot"><div class="finfo"><i class="ti ti-clock" style="font-size:10px;vertical-align:-1px;margin-right:2px"></i>${m.time}</div>${foot}</div>${m.wxKey?wxStrip(m.wxKey):''}</div></div>`;}
+function getFiltered(){let list=MATCHES;if(filter!=='all')list=list.filter(m=>m.sport===filter);if(searchQ.trim()){const q=searchQ.toLowerCase();list=list.filter(m=>m.tags.some(t=>t.includes(q))||m.home.toLowerCase().includes(q)||m.away.toLowerCase().includes(q)||m.tournament.toLowerCase().includes(q));}return list;}
+function renderScores(){const list=getFiltered();const ca=document.getElementById('scoreArea');if(!list.length){ca.innerHTML=`<div class="no-res"><i class="ti ti-search" style="font-size:26px;display:block;margin-bottom:8px"></i>${g('noRes')}</div>`;updateCounts();return;}const live=list.filter(m=>m.status==='live'),final=list.filter(m=>m.status==='final'),upcoming=list.filter(m=>m.status==='upcoming');let html='';if(live.length){html+=`<div class="sec-label"><div class="ldot"></div>${g('liveNow')} (${live.length})</div>`;live.forEach(m=>{html+=renderCard(m);});}if(upcoming.length){html+=`<div class="sec-label">${g('upcoming')} (${upcoming.length})</div>`;upcoming.forEach(m=>{html+=renderCard(m);});}if(final.length){html+=`<div class="sec-label">${g('recent')} (${final.length})</div>`;final.forEach(m=>{html+=renderCard(m);});}html+=`<div class="last-upd">${g('updated')} · ${lastUpd.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})}</div>`;ca.innerHTML=html;updateCounts();}
+function updateCounts(){[['all','cnt-all',MATCHES],['cricket','cnt-c',MATCHES.filter(m=>m.sport==='cricket')],['football','cnt-f',MATCHES.filter(m=>m.sport==='football')],['basketball','cnt-b',MATCHES.filter(m=>m.sport==='basketball')],['tennis','cnt-t',MATCHES.filter(m=>m.sport==='tennis')]].forEach(([s,id,list])=>{const el=document.getElementById(id);if(el)el.textContent=list.length;});}
+function setFilter(sport,btn){filter=sport;document.querySelectorAll('#fbar .ftab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderScores();}
+function handleSearch(val){searchQ=val;document.getElementById('sclear').style.display=val?'block':'none';renderScores();}
+function clearSearch(){document.getElementById('si').value='';searchQ='';document.getElementById('sclear').style.display='none';renderScores();}
+function switchPg(id,btn){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));document.getElementById('pg-'+id).classList.add('active');document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');if(id==='standings')renderStandings();if(id==='weather')renderWeatherTab();}
+function setSTab(tab,btn){sSTab=tab;document.querySelectorAll('#sfbar .ftab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderStandings();}
+function renderWeatherTab(){const wa=document.getElementById('weatherArea');let html=`<div class="sec-label"><i class="ti ti-map-pin" style="font-size:10px"></i> ${g('venueWeather')} — ${new Date().toLocaleDateString([],{weekday:'long',month:'short',day:'numeric'})}</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px">`;Object.entries(WEATHER).forEach(([key,w])=>{const rc=w.rain<30?'rain-low':w.rain<60?'rain-mid':'rain-high';const warn=w.rain>=55?`<div style="margin-top:5px;font-size:10px;font-weight:600;color:#993C1D">⚠️ ${w.rain}% ${g('rain')}</div>`:'';html+=`<div style="background:var(--color-background-primary);border:.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px"><div style="display:flex;align-items:center;gap:8px"><div style="font-size:28px">${w.icon}</div><div style="flex:1;min-width:0"><div style="font-size:10px;color:var(--color-text-tertiary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${w.venue}</div><div style="font-size:10px;color:var(--color-text-tertiary)">${w.flag} ${w.city}</div><div style="font-size:22px;font-weight:600;color:var(--color-text-primary);line-height:1.2;margin-top:3px">${w.temp}°C</div><div style="font-size:11px;color:var(--color-text-secondary)">${w.desc} · High ${w.high}°C</div></div></div><div style="margin-top:8px"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--color-text-tertiary);margin-bottom:3px"><span>${g('rain')}</span><span>${w.rain}%</span></div><div style="height:4px;background:var(--color-background-secondary);border-radius:2px;overflow:hidden"><div class="wx-rain-fill ${rc}" style="height:100%;width:${w.rain}%"></div></div></div>${warn}</div>`;});html+=`</div>`;wa.innerHTML=html;}
+function renderStandings(){const sa=document.getElementById('standArea');if(sSTab==='epl'){let html=`<div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:7px">${g('eplt')}</div><div style="overflow-x:auto"><table class="stand-table"><tr><th>${g('pos')}</th><th>${g('team')}</th><th>${g('w')}</th><th>${g('d')}</th><th>${g('l')}</th><th>${g('pts')}</th></tr>`;EPL_STAND.forEach(row=>{const rel=row.r>=18;const rnk=row.r<=3?`<span class="rb r${row.r}">${row.r}</span>`:row.r;html+=`<tr class="${rel?'relegation-row':''}"><td>${rnk}</td><td>${row.t}</td><td>${row.w}</td><td>${row.d}</td><td>${row.l}</td><td class="pts-col">${row.pts}</td></tr>`;});html+=`</table></div><div style="font-size:10px;color:var(--color-text-tertiary);margin-top:5px">${g('relzone')}</div>`;sa.innerHTML=html;}else if(sSTab==='nba'){let html=`<div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:7px">${g('nbat')}</div>`;[{label:g('west'),data:NBA_WEST},{label:g('east'),data:NBA_EAST}].forEach(({label,data})=>{html+=`<div class="conf-hdr">${label}</div><table class="stand-table"><tr><th>${g('pos')}</th><th>${g('team')}</th><th>${g('w')}</th><th>${g('l')}</th><th>${g('pct')}</th></tr>`;data.forEach(row=>{const rnk=row.r<=3?`<span class="rb r${row.r}">${row.r}</span>`:row.r;html+=`<tr><td>${rnk}</td><td>${row.t}</td><td>${row.w}</td><td>${row.l}</td><td class="pts-col">${(row.pct*100).toFixed(1)}%</td></tr>`;});html+=`</table>`;});sa.innerHTML=html;}else{let html=`<div style="font-size:11px;color:var(--color-text-secondary);margin-bottom:7px">${g('iplt')}</div><table class="stand-table"><tr><th>${g('pos')}</th><th>${g('team')}</th><th>${g('w')}</th><th>${g('l')}</th><th>${g('pts')}</th><th>${g('nrr')}</th></tr>`;IPL_STAND.forEach(row=>{const rnk=row.r<=4?`<span class="rb r${Math.min(row.r,3)}">${row.r}</span>`:row.r;html+=`<tr><td>${rnk}</td><td>${row.t}</td><td>${row.w}</td><td>${row.l}</td><td class="pts-col">${row.pts}</td><td style="color:${row.nrr.startsWith('-')?'#993C1D':'#3B6D11'};font-size:11px">${row.nrr}</td></tr>`;});html+=`</table>`;sa.innerHTML=html;}}
+function doRefresh(){const btn=document.getElementById('refreshBtn');btn.classList.add('spinning');document.getElementById('refreshLabel').textContent=g('refreshing');setTimeout(()=>{lastUpd=new Date();btn.classList.remove('spinning');document.getElementById('refreshLabel').textContent=g('refresh');renderScores();renderStandings();renderWeatherTab();},1300);}
+buildTicker();applyLang();renderScores();renderStandings();renderWeatherTab();
+</script>
+</body>
+</html>
